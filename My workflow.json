@@ -1,0 +1,125 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-estate-reception",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -496,
+        240
+      ],
+      "id": "077a3025-f1f2-43fb-9116-ab2b19370a43",
+      "name": "Webhook",
+      "webhookId": "d8f9ed7f-31af-476d-a55c-23e97f1ca242"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are UrbanNest Realty AI Assistant.\n\nYou are a professional real estate help desk assistant.\n\nYour job is to answer user questions about:\n\n* Houses\n* Plots\n* Apartments\n* Property prices\n* Buying\n* Selling\n* Renting\n* Investments\n\nRules:\n\n* Answer the user's question directly.\n* Be helpful and professional.\n* Keep the conversation natural.\n* Do not collect leads.\n* Do not ask for email or phone number unless the user requests contact.\n* Never repeat the same message.\n* Never say:\n  \"Our team will contact you shortly.\"\n\nAct like a real estate consultant and help desk representative.\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -208,
+        224
+      ],
+      "id": "e6a74b16-0c7c-459d-b713-1c1c3201a53d",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        384
+      ],
+      "id": "6a55f923-5906-45ca-9566-dd405e104804",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TnhlnbBtXO2GWZni",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        176,
+        224
+      ],
+      "id": "ad23eb86-dc30-4ca4-808a-f8f73097058b",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7889a039-9175-4270-bcce-ee2da62d5cef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a11a86807964817cd323f5dd5979073e34d629138f6cd5734fd61d0f9cb6c0f4"
+  },
+  "nodeGroups": [],
+  "id": "8J55FUn1nQp0wcep",
+  "tags": []
+}
